@@ -11,6 +11,10 @@
 		7E2781D82A7000D300424815 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E2781D72A7000D300424815 /* ContentView.swift */; };
 		7E2781DA2A7000D400424815 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7E2781D92A7000D400424815 /* Assets.xcassets */; };
 		7E2781DD2A7000D400424815 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7E2781DC2A7000D400424815 /* Preview Assets.xcassets */; };
+		7E2781E52A70045800424815 /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E2781E42A70045800424815 /* Card.swift */; };
+		7E2781E72A7004A100424815 /* Expense.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E2781E62A7004A100424815 /* Expense.swift */; };
+		7E2781EA2A70060B00424815 /* Home.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E2781E92A70060B00424815 /* Home.swift */; };
+		7E2781ED2A700DF800424815 /* OffsetReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E2781EC2A700DF800424815 /* OffsetReader.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -19,6 +23,10 @@
 		7E2781D72A7000D300424815 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		7E2781D92A7000D400424815 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7E2781DC2A7000D400424815 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		7E2781E42A70045800424815 /* Card.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Card.swift; sourceTree = "<group>"; };
+		7E2781E62A7004A100424815 /* Expense.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Expense.swift; sourceTree = "<group>"; };
+		7E2781E92A70060B00424815 /* Home.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Home.swift; sourceTree = "<group>"; };
+		7E2781EC2A700DF800424815 /* OffsetReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OffsetReader.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,6 +59,9 @@
 		7E2781D42A7000D300424815 /* BankingApp */ = {
 			isa = PBXGroup;
 			children = (
+				7E2781EB2A700DEE00424815 /* Helpers */,
+				7E2781E82A70060700424815 /* View */,
+				7E2781E32A70044F00424815 /* Model */,
 				7E2781D52A7000D300424815 /* BankingAppApp.swift */,
 				7E2781D72A7000D300424815 /* ContentView.swift */,
 				7E2781D92A7000D400424815 /* Assets.xcassets */,
@@ -65,6 +76,31 @@
 				7E2781DC2A7000D400424815 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		7E2781E32A70044F00424815 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				7E2781E42A70045800424815 /* Card.swift */,
+				7E2781E62A7004A100424815 /* Expense.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		7E2781E82A70060700424815 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				7E2781E92A70060B00424815 /* Home.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		7E2781EB2A700DEE00424815 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				7E2781EC2A700DF800424815 /* OffsetReader.swift */,
+			);
+			path = Helpers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -137,7 +173,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7E2781E72A7004A100424815 /* Expense.swift in Sources */,
+				7E2781ED2A700DF800424815 /* OffsetReader.swift in Sources */,
 				7E2781D82A7000D300424815 /* ContentView.swift in Sources */,
+				7E2781EA2A70060B00424815 /* Home.swift in Sources */,
+				7E2781E52A70045800424815 /* Card.swift in Sources */,
 				7E2781D62A7000D300424815 /* BankingAppApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
