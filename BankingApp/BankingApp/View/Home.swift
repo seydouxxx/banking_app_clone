@@ -15,6 +15,7 @@ struct Home: View {
   @State private var activePage: Int = 1
   @State private var myCards: [Card] = sampleCards
   @State private var offset: CGFloat = 0
+  @State private var isManualAnimating: Bool = false
   
   var body: some View {
     ScrollView(.vertical, showsIndicators: false) {
@@ -45,9 +46,11 @@ struct Home: View {
               .frame(width: proxy.width - 60)
               .tag(index(card))
               .offsetX(activePage == index(card)) { rect in
-                let minX = rect.minX
-                let pageOffset = minX - (size.width * CGFloat(index(card)))
-                offset = pageOffset
+                if !isManualAnimating {
+                  let minX = rect.minX
+                  let pageOffset = minX - (size.width * CGFloat(index(card)))
+                  offset = pageOffset
+                }
               }
             }
           }
@@ -73,9 +76,28 @@ struct Home: View {
         }
         .frame(height: pageHeight)
         .zIndex(1000)
+        
+        ExpensesView(expenses: myCards[activePage == 0 ? 1 : activePage].expenses)
+          .padding(.horizontal, 30)
+          .padding(.top, 10)
       }
       .padding(.top, safeArea.top + 15)
       .padding(.bottom, safeArea.bottom + 15)
+      .id("CONTENT")
+    }
+    .scrollDisabled(activePage == 0 || isManualAnimating)
+    .overlay(content: {
+      if reverseProgress(size) < 0.15 && activePage == 0 {
+        ExpandedView()
+          .scaleEffect(1 - reverseProgress(size))
+          .opacity(1.0 - (reverseProgress(size) / 0.15))
+          .transition(.identity)
+      }
+    })
+    .onChange(of: offset) { newValue in
+      if newValue == 0 && activePage == 0 {
+        proxy.scrollTo("CONTENT", anchor: .topLeading)
+      }
     }
   }
   
@@ -85,7 +107,7 @@ struct Home: View {
       Text("Hello")
         .font(.title)
         
-      Text("Justine")
+      Text("Seydoux")
         .font(.title)
         .fontWeight(.bold)
       
@@ -105,6 +127,124 @@ struct Home: View {
         .opacity(0.2)
     }
     .padding(.horizontal, 30)
+  }
+  
+  @ViewBuilder
+  func ExpandedView() -> some View {
+    VStack {
+      VStack(spacing: 30) {
+        HStack(spacing: 12) {
+          Image(systemName: "creditcard.fill")
+            .font(.title2)
+          
+          Text("Credit Card")
+            .font(.title3.bold())
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .overlay(alignment: .trailing) {
+          Button {
+            
+            isManualAnimating = true
+            
+            withAnimation(.easeInOut(duration: 0.2)) {
+              activePage = 1
+              offset = -size.width
+            }
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.22) {
+              isManualAnimating = false
+            }
+          } label: {
+            Image(systemName: "xmark.circle.fill")
+              .font(.title)
+              .foregroundColor(.white.opacity(0.5))
+          }
+
+        }
+        
+        HStack(spacing: 12) {
+          Image(systemName: "building.columns.fill")
+            .font(.title2)
+          
+          Text("Open an account")
+            .font(.title3.bold())
+          
+          Image(systemName: "dollarsign.circle.fill")
+            .font(.largeTitle)
+            .foregroundColor(.white)
+            .padding(.leading, 5)
+          
+          Image(systemName: "eurosign.circle.fill")
+            .font(.largeTitle)
+            .foregroundColor(.blue)
+            .padding(.leading, -25)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+      }
+      .foregroundColor(.white)
+      .padding(25)
+      .background {
+        RoundedRectangle(cornerRadius: 25, style: .continuous)
+          .fill(Color.brown)
+      }
+      
+      Text("Your Card Number")
+        .font(.title3)
+        .fontWeight(.semibold)
+        .foregroundColor(.white.opacity(0.35))
+        .padding(.top, 10)
+      
+      let values: [String] = [
+        "1", "2", "3", "4", "5", "6", "7", "8", "9", "scan", "0", "back"
+      ]
+      
+      GeometryReader {
+        let size = $0.size
+        
+        LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 0), count: 3), spacing: 0) {
+          ForEach(values, id: \.self) { item in
+            Button {
+              
+            } label: {
+              ZStack {
+                if item == "scan" {
+                  Image(systemName: "barcode.viewfinder")
+                    .font(.title.bold())
+                } else if item == "back" {
+                  Image(systemName: "delete.backward")
+                    .font(.title.bold())
+                } else {
+                  Text(item)
+                    .font(.title.bold())
+                }
+              }
+              .foregroundColor(.white)
+              .frame(width: size.width/3, height: size.height/4)
+            }
+          }
+        }
+        .padding(.horizontal, -15)
+      }
+      
+      Button {
+        
+      } label: {
+        Text("Add Card")
+          .font(.title2.bold())
+          .foregroundColor(.white)
+          .frame(maxWidth: .infinity)
+          .padding(.vertical, 20)
+          .background {
+            RoundedRectangle(cornerRadius: 20, style: .continuous)
+              .fill(Color.blue)
+          }
+      }
+
+    }
+    .padding(.horizontal, 15)
+    .padding(.top, 15 + safeArea.top)
+    .padding(.bottom, 15 + safeArea.bottom)
+    .environment(\.colorScheme, .dark)
   }
   
   func index(_ of: Card) -> Int {
@@ -189,6 +329,54 @@ struct CardView: View {
           }
       }
       .clipShape(RoundedRectangle(cornerRadius: 40, style: .continuous))
+    }
+  }
+}
+
+struct ExpensesView: View {
+  var expenses: [Expense]
+  @State private var animateChange: Bool = true
+  var body: some View {
+    VStack(spacing: 18) {
+      ForEach(expenses) { expense in
+        HStack(spacing: 12) {
+          Image(systemName: expense.productIcon)
+            .resizable()
+            .foregroundColor(.white)
+            .aspectRatio(contentMode: .fit)
+            .frame(width: 55, height: 55)
+            .scaleEffect(0.6)
+            .background(.black)
+            .clipShape(Circle())
+            
+          VStack(alignment: .leading) {
+            Text(expense.prouduct)
+              .font(.body)
+            
+            Text(expense.spendType)
+              .font(.footnote)
+              .foregroundColor(.gray)
+          }
+          
+          Spacer()
+          
+          Text(expense.amoundSpent)
+            .font(.body.bold())
+        }
+      }
+    }
+    .opacity(animateChange ? 1 : 0)
+    .offset(y: animateChange ? 0 : 50)
+    .onChange(of: expenses) { newValue in
+      withAnimation(.easeInOut(duration: 0.2)) {
+        animateChange = false
+      }
+      
+      DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+        withAnimation(.easeInOut(duration: 0.25)) {
+          animateChange = true
+        }
+      }
     }
   }
 }
